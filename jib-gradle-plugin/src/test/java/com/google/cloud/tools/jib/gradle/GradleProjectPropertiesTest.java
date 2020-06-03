@@ -38,7 +38,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Resources;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -62,7 +61,6 @@ import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.FileCollection;
-import org.gradle.api.internal.file.AbstractFileCollection;
 import org.gradle.api.internal.file.FileResolver;
 import org.gradle.api.java.archives.internal.DefaultManifest;
 import org.gradle.api.logging.Logger;
@@ -75,7 +73,6 @@ import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.SourceSetOutput;
 import org.gradle.api.tasks.TaskContainer;
-import org.gradle.api.tasks.TaskDependency;
 import org.gradle.api.tasks.TaskProvider;
 import org.gradle.jvm.tasks.Jar;
 import org.hamcrest.CoreMatchers;
@@ -96,31 +93,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class GradleProjectPropertiesTest {
 
   private static final Instant SAMPLE_FILE_MODIFICATION_TIME = Instant.ofEpochSecond(32);
-
-  /** Implementation of {@link FileCollection} that just holds a set of {@link File}s. */
-  private static class TestFileCollection extends AbstractFileCollection {
-
-    private final Set<File> files;
-
-    private TestFileCollection(Set<Path> files) {
-      this.files = files.stream().map(Path::toFile).collect(Collectors.toSet());
-    }
-
-    @Override
-    public String getDisplayName() {
-      return null;
-    }
-
-    @Override
-    public Set<File> getFiles() {
-      return files;
-    }
-
-    @Override
-    public TaskDependency getBuildDependencies() {
-      return task -> Collections.emptySet();
-    }
-  }
 
   /** Helper for reading back layers in a {@link BuildContext}. */
   private static class ContainerBuilderLayers {
